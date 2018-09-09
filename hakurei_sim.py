@@ -2,30 +2,32 @@ import discord
 from markov import Markov
 from my_token import TOKEN
 
-description = """
-A bot that utilizes Markov chains to generate text based on user's messages.
-"""
-
 class HakureiSimulator(discord.Client):
     def __init__(self):
         super().__init__()
         self.prefix = 'h!'
         self.markov = Markov()
 
-    def is_command(self, message):
-        return (message.content.startswith(self.prefix)
-                or message.content.startswith(self.user.mention))
 
     async def on_ready(self):
         print(f'\n\nLogging in as {self.user.name}')
 
         await self.change_presence(game=discord.Game(name='with words'))
         print(f'Successfully logged in and booted...!')
+   
+    def is_command(self, message):
+        return (message.content.startswith(self.prefix)
+                or message.content.startswith(self.user.mention))
+
+    # this blocks an annoying user
+    def is_zino(self, user):
+        return user.id == 320379142774194176
 
     async def on_message(self, message):
         if not message.author.bot:
-            if not self.is_command(message):
-                self.markov.add_message(message.content)
+            if not self.is_command(message) and message.guild:
+                if not self.is_zino(message.author):
+                    self.markov.add_message(message.content)
             else:
                 await self.select_command(message)
     
@@ -58,4 +60,6 @@ class HakureiSimulator(discord.Client):
         await channel.send(message)
 
     async def unknown_command(self, channel):
-        await channel.send("Sorry, I don't understand. Try typing `h! help`!")
+        if channel.name == 'spam':
+            error = "Sorry, I don't understand. Try typing `h! help`!"
+            await channel.send(error)

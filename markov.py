@@ -10,7 +10,7 @@ class Markov:
 
     def make_pairs(self, message):
         words = message.split()
-        words = list(filter(lambda word: not self.is_mention(word), words))
+        words = list(filter(lambda word: self.is_valid(word), words))
         for i in range(len(words)):
             if i == len(words) - 1:
                 yield (words[i], END)
@@ -19,6 +19,17 @@ class Markov:
 
     def is_mention(self, word):
         return word.startswith('<@') and word.endswith('>')
+
+    def is_command(self, word):
+        return word == 'h!' or word.startswith('!') or word.startswith('.')
+
+    def is_link(self, word):
+        return word.startswith('http://') or word.startswith('https://')
+
+    def is_valid(self, word):
+        return not (self.is_mention(word)
+                    or self.is_command(word)
+                    or self.is_link(word))
 
     def add_message(self, message):
         pairs = self.make_pairs(message)
