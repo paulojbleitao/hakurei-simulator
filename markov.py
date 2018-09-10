@@ -50,6 +50,23 @@ class Markov:
         if chain[-1] == END: chain.pop()
         return ' '.join(chain)
 
+    def word_with_most_links(self):
+        top_word = random.choice(list(self.word_dict))
+        for word in self.word_dict:
+            if len(self.word_dict[word]) > len(self.word_dict[top_word]):
+                top_word = word
+        return top_word
+
+    def statistics(self):
+        n_words = len(list(self.word_dict))
+        most_links = self.word_with_most_links()
+        stats = (
+            f'Right now I know {n_words} unique words!\n'
+            f'The word that leads to the most different words is `{most_links}`'
+            f' ({len(self.word_dict[most_links])} words)!'
+        )
+        return stats
+
     def save_data(self):
         with open('data.pickle', 'wb') as f:
             pickle.dump(self.word_dict, f, pickle.HIGHEST_PROTOCOL)

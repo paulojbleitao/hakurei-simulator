@@ -8,7 +8,6 @@ class HakureiSimulator(discord.Client):
         self.prefix = 'h!'
         self.markov = Markov()
 
-
     async def on_ready(self):
         print(f'\n\nLogging in as {self.user.name}')
 
@@ -32,13 +31,16 @@ class HakureiSimulator(discord.Client):
                 await self.select_command(message)
     
     async def select_command(self, message):
-        command = await self.format_message(message.content)
-        if command == 'talk':
-            await self.talk(message.channel)
-        elif command == 'help':
-            await self.help(message.channel)
-        else:
-            await self.unknown_command(message.channel)
+        if not message.guild or message.channel.name == 'spam':
+            command = await self.format_message(message.content)
+            if command == 'talk':
+                await self.talk(message.channel)
+            elif command == 'help':
+                await self.help(message.channel)
+            elif command == 'stats':
+                await self.stats(message.channel)
+            else:
+                await self.unknown_command(message.channel)
 
     async def format_message(self, message):
         if message.startswith(self.prefix):
@@ -51,15 +53,19 @@ class HakureiSimulator(discord.Client):
     async def talk(self, channel):
         await channel.send(self.markov.generate_message())
 
+    async def stats(self, channel):
+        await channel.send(self.markov.statistics())
+
     async def help(self, channel):
-        message = ("Hi! To use a command, start your message with `h!` or by mentioning me.\n\n" +
-            "The commands currently available are:\n" +
-            "\t- **help**: to make me send this very message again, though I'm not sure why you would want to do that.\n" +
-            "\t- **talk**: to make me say a random sentence based on *your* messages!")
+        message = (
+            "Hi! To use a command, start your message with `h!` or by mentioning me.\n\n"
+            "The commands currently available are:\n"
+            "\t- **help**: to make me send this very message again, though I'm not sure why you would want to do that.\n"
+            "\t- **talk**: to make me say a random sentence based on *your* messages!\n"
+            "\t- **stats**: to see some potentially interesting numbers!"
+        )
 
         await channel.send(message)
 
     async def unknown_command(self, channel):
-        if channel.name == 'spam':
-            error = "Sorry, I don't understand. Try typing `h! help`!"
-            await channel.send(error)
+        await channel.send("Sorry, I don't understand. Try typing `h! help`!")
