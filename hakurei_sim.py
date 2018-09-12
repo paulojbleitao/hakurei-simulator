@@ -26,7 +26,7 @@ class HakureiSimulator(discord.Client):
         if not message.author.bot:
             if not self.is_command(message) and message.guild:
                 if not self.is_zino(message.author):
-                    self.markov.add_message(message.content)
+                    self.markov.add_message(message.content, message.author.name)
             else:
                 await self.select_command(message)
     
@@ -39,6 +39,8 @@ class HakureiSimulator(discord.Client):
                 await self.help(message.channel)
             elif command == 'stats':
                 await self.stats(message.channel)
+            elif command.startswith('stats'):
+                await self.word_stats(command, message.channel)
             else:
                 await self.unknown_command(message.channel)
 
@@ -55,6 +57,13 @@ class HakureiSimulator(discord.Client):
 
     async def stats(self, channel):
         await channel.send(self.markov.statistics())
+
+    async def word_stats(self, command, channel):
+        words = command.split()
+        if len(words) > 2:
+            await channel.send('Sorry, I can only provide the stats for one word at a time!')
+        else:
+            await channel.send(self.markov.word_statistics(words[1]))
 
     async def help(self, channel):
         message = (
