@@ -2,6 +2,7 @@ from collections import defaultdict, Counter
 import random
 import pickle
 
+START = 1
 END = 0
 
 class Markov:
@@ -11,8 +12,10 @@ class Markov:
     def make_pairs(self, message):
         words = message.split()
         words = list(filter(lambda word: self.is_valid(word), words))
-        for i in range(len(words)):
-            if i == len(words) - 1:
+        for i in range(-1, len(words)):
+            if i == -1:
+                yield (START, words[i + 1])
+            elif i == len(words) - 1:
                 yield (words[i], END)
             else:
                 yield (words[i], words[i + 1])
@@ -38,16 +41,16 @@ class Markov:
         self.save_data()
 
     def generate_message(self):
-        first_word = random.choice(list(self.word_dict))
+        first_word = START
         chain = [first_word]
 
-        while chain[-1] != END and len(chain) < 30:
+        while chain[-1] != END:
             current_word = self.word_dict[chain[-1]]
             next = list(current_word)
             weights = list(current_word.values())
             chain.append(random.choices(next, weights)[0])
         
-        if chain[-1] == END: chain.pop()
+        chain = chain[1:-1]
         return ' '.join(chain)
 
     def word_with_most_links(self):
