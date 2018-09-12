@@ -1,6 +1,7 @@
 from collections import defaultdict, Counter
 import random
 import pickle
+from util import is_valid
 
 START = 1
 END = 0
@@ -12,7 +13,7 @@ class Markov:
 
     def make_pairs(self, message):
         words = message.split()
-        words = list(filter(lambda word: self.is_valid(word), words))
+        words = list(filter(lambda word: is_valid(word), words))
         start_index = -1 if len(words) > 0 else 0
         for i in range(start_index, len(words)):
             if i == -1:
@@ -21,20 +22,6 @@ class Markov:
                 yield (words[i], END)
             else:
                 yield (words[i], words[i + 1])
-
-    def is_mention(self, word):
-        return word.startswith('<@') and word.endswith('>')
-
-    def is_command(self, word):
-        return word == 'h!' or word.startswith('!') or word.startswith('.')
-
-    def is_link(self, word):
-        return word.startswith('http://') or word.startswith('https://')
-
-    def is_valid(self, word):
-        return not (self.is_mention(word)
-                    or self.is_command(word)
-                    or self.is_link(word))
 
     def add_words(self, message):
         pairs = self.make_pairs(message)
@@ -67,7 +54,7 @@ class Markov:
     def word_with_most_links(self):
         top_word = random.choice(list(self.word_dict))
         for word in self.word_dict:
-            if len(self.word_dict[word]) > len(self.word_dict[top_word]):
+            if len(self.word_dict[word]) > len(self.word_dict[top_word]) and word != START:
                 top_word = word
         return top_word
 
@@ -86,7 +73,7 @@ class Markov:
         for w in self.word_dict:
             if word in self.word_dict[w]:
                 total += self.word_dict[w][word]
-    
+
         return total
 
     def person_who_used_most(self, word):
