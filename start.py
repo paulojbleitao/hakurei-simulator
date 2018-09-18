@@ -1,7 +1,7 @@
 import discord
 import logging
 from hakurei_sim import HakureiSimulator
-from my_token import TOKEN
+import os
 
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
@@ -10,4 +10,4 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 bot = HakureiSimulator()
-bot.run(TOKEN)
+bot.run(os.environ['TOKEN'])

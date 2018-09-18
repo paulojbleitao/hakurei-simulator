@@ -1,6 +1,5 @@
 import discord
 from markov import Markov
-from my_token import TOKEN
 from util import is_banned, is_hakurei_command, format_message
 
 class HakureiSimulator(discord.Client):
