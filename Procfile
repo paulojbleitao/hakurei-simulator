@@ -1,1 +1,1 @@
-worker: python3.6 start.py
+worker: python3.6 src/start.py
