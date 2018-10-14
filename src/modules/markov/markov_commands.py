@@ -9,7 +9,7 @@ class MarkovCommands():
     async def on_message(self, message):
         if not message.author.bot:
             if not is_hakurei_command(message) and message.guild:
-                if not is_banned(message.author):
+                if not is_banned(message.author) and not message.content.startswith('$'):
                     self.markov.add_message(message.content, message.author.name)
             else:
                 await self.select_command(message)
