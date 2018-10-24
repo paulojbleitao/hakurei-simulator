@@ -23,7 +23,7 @@ class Janitor():
             await message.channel.send(' '.join(message.content.split()[1:]))
         elif message.content.startswith('$hunting') and message.channel.name in ['spam', 'waifus']:
             await message.channel.send(f'I am hunting: { self.format_list(self.hunting) }')
-        elif message.content.startswith('$hunt') and message.author.id == os.environ['OWNER_ID']:
+        elif message.content.startswith('$hunt') and str(message.author.id) == os.environ['OWNER_ID']:
             character = ' '.join(message.content.split()[1:])
             if character.lower() in map(lambda x: x.lower(), self.hunting):
                 await message.add_reaction('❌')
