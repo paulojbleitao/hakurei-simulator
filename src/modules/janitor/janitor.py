@@ -10,7 +10,7 @@ class Janitor():
 
     async def on_message(self, message):
         if message.channel.name == 'waifus' and message.author.bot and self.is_claimable(message):
-            if self.check_cooldown() and self.can_react():
+            if self.check_cooldown() and self.can_react:
                 if self.hunting:
                     if message.embeds[0].author.name.lower() in map(lambda x: x.lower(), self.hunting):
                         self.remove_hunted(message.embeds[0].author.name)
