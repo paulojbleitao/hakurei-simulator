@@ -1,4 +1,4 @@
-banlist = [320379142774194176]
+banlist = [320379142774194176, 235917117575266304]
 def is_banned(user):
     return user.id in banlist
 
