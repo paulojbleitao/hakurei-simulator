@@ -30,6 +30,8 @@ class Janitor():
             else:
                 self.hunting.append(character)
                 await message.add_reaction('✅')
+        else:
+            self.can_react = False
 
     async def react(self, message):
         self.can_react = False
@@ -51,7 +53,7 @@ class Janitor():
         return message.embeds and message.embeds[0].image.url
 
     def is_roll(self, message):
-        return message.startswith('$') and message[1] in ['h', 'w', 'm']
+        return len(message) in [2, 3] and message.startswith('$') and message[1] in ['h', 'w', 'm']
 
     def check_cooldown(self):
         current_time = time.time()
