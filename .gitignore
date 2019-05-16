@@ -2,4 +2,4 @@ __pycache__/
 my_token.py
 *.pickle
 *.log
-hakusim/
+venv/

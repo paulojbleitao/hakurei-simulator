@@ -1,9 +1,12 @@
+# constants
 banlist = [320379142774194176, 235917117575266304]
+prefix = 'h!'
+my_mention = '<@487127745009025026>'
+
+# functions
 def is_banned(user):
     return user.id in banlist
 
-prefix = 'h!'
-my_mention = '<@487127745009025026>'
 def is_hakurei_command(message):
     return (message.content.startswith(prefix)
             or message.content.startswith(my_mention))
