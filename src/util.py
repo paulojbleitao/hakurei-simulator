@@ -34,6 +34,5 @@ def is_valid(word):
                 or is_link(word))
 
 def is_channel_allowed(channel):
-    print(channel.category_id)
     return (channel.category_id in [493563857290133504]
            or channel.name == 'hakusim-test')
