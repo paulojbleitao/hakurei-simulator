@@ -1,6 +1,6 @@
 import time
 import os
-from util import is_banned
+from util import is_banned, is_channel_allowed
 
 class Janitor():
     def __init__(self):
@@ -19,9 +19,9 @@ class Janitor():
                     await self.react(message)
         elif message.channel.name == 'waifus' and self.is_roll(message.content):
             self.can_react = True
-        elif message.content.startswith('$repeat') and message.channel.name in ['spam', 'waifus', 'trade'] and not is_banned(message.author):
+        elif message.content.startswith('$repeat') and is_channel_allowed(message.channel) and not is_banned(message.author):
             await message.channel.send(' '.join(message.content.split()[1:]))
-        elif message.content.startswith('$hunting') and message.channel.name in ['spam', 'waifus']:
+        elif message.content.startswith('$hunting') and is_channel_allowed(message.channel):
             await message.channel.send(f'I am hunting: { self.format_list(self.hunting) }')
         elif message.content.startswith('$hunt') and str(message.author.id) == os.environ['OWNER_ID']:
             character = ' '.join(message.content.split()[1:])
